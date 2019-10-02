@@ -1,3 +1,125 @@
-<p>
-  designer works!
-</p>
+<mat-drawer-container class="main-container" hasBackdrop="true" autosize>
+
+  <mat-drawer #drawer class="sidenav" mode="over">
+    <p>Auto-resizing sidenav</p>
+    <p *ngIf="showFiller">Lorem, ipsum dolor sit amet consectetur.</p>
+    <button (click)="showFiller = !showFiller" mat-raised-button>
+      Toggle extra text
+    </button>
+  </mat-drawer>
+  <div class="sidenav-toggler" (click)="drawer.toggle()">
+    <mat-icon aria-hidden="false">menu</mat-icon>
+  </div>
+  <div class="main-content" cdkDropListGroup>
+    <div class="row">
+      <div class="column" cdkDropList id="keyPartners" (cdkDropListDropped)="drop($event)">
+        <div class="column-header">
+          <span>KeyPartners</span>
+          <mat-icon aria-hidden="false" (click)="addNote('keyPartners')">add</mat-icon>
+        </div>
+        <app-note *ngFor="let item of mapToArray(dropLists.keyPartners)"
+         [note]="item" [cdkDragData]="item.id" cdkDrag
+         (edit)=onEdit($event)
+         (delete)=onDelete($event)>
+        </app-note>
+      </div>
+      <div class="column">
+        <div class="sub-column" cdkDropList id="keyActivities" (cdkDropListDropped)="drop($event)">
+          <div class="column-header">
+            <span>KeyActivities</span>
+            <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('keyActivities')">add
+            </mat-icon>
+          </div>
+          <app-note *ngFor="let item of mapToArray(dropLists.keyActivities)"
+           [note]="item" [cdkDragData]="item.id" cdkDrag 
+           (edit)=onEdit($event)
+           (delete)=onDelete($event)>
+          </app-note>
+        </div>
+        <div class="sub-column" cdkDropList id="keyRessources" (cdkDropListDropped)="drop($event)">
+          <div class="column-header">
+            <span>KeyRessources</span>
+            <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('keyRessources')">add
+            </mat-icon>
+          </div>
+          <app-note *ngFor="let item of mapToArray(dropLists.keyRessources)"
+           [note]="item" [cdkDragData]="item.id" cdkDrag 
+          (edit)=onEdit($event)
+          (delete)=onDelete($event)>
+        </app-note>
+        </div>
+      </div>
+      <div class="column" cdkDropList id="valueProposition" (cdkDropListDropped)="drop($event)">
+        <div class="column-header">
+          <span>ValueProposition</span>
+          <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('valueProposition')">add
+          </mat-icon>
+        </div>
+        <app-note *ngFor="let item of mapToArray(dropLists.valueProposition)"
+         [note]="item" [cdkDragData]="item.id" cdkDrag
+         (edit)=onEdit($event)
+         (delete)=onDelete($event)></app-note>
+      </div>
+      <div class="column">
+        <div class="sub-column" cdkDropList id="customers" (cdkDropListDropped)="drop($event)">
+          <div class="column-header">
+            <span>Customers</span>
+            <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('customers')">add</mat-icon>
+          </div>
+          <app-note *ngFor="let item of mapToArray(dropLists.customers)"
+           [note]="item" [cdkDragData]="item.id" cdkDrag
+           (edit)=onEdit($event)
+           (delete)=onDelete($event)>
+          </app-note>
+        </div>
+        <div class="sub-column" cdkDropList id="channel" (cdkDropListDropped)="drop($event)">
+          <div class="column-header">
+            <span>Channel</span>
+            <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('channel')">add</mat-icon>
+          </div>
+          <app-note *ngFor="let item of mapToArray(dropLists.channel)"
+           [note]="item" [cdkDragData]="item.id" cdkDrag
+           (edit)=onEdit($event)
+           (delete)=onDelete($event)>
+          </app-note>
+        </div>
+      </div>
+      <div class="column" cdkDropList id="customerSegment" (cdkDropListDropped)="drop($event)">
+        <div class="column-header">
+          <span>Customer Segment</span>
+          <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('customerSegment')">add
+          </mat-icon>
+        </div>
+        <app-note *ngFor="let item of mapToArray(dropLists.customerSegment)"
+         [note]="item" [cdkDragData]="item.id" cdkDrag
+         (edit)=onEdit($event)
+         (delete)=onDelete($event)></app-note>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column2" cdkDropList id="costStructure" (cdkDropListDropped)="drop($event)">
+        <div class="column-header">
+          <span>Cost Structure</span>
+          <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('costStructure')">add</mat-icon>
+        </div>
+        <app-note *ngFor="let item of mapToArray(dropLists.costStructure)"
+         [note]="item" [cdkDragData]="item.id" cdkDrag
+         (edit)=onEdit($event)
+         (delete)=onDelete($event)></app-note>
+      </div>
+      <div class="column2" cdkDropList id="revenueStream" (cdkDropListDropped)="drop($event)">
+        <div class="column-header">
+          <span>Revenue Stream</span>
+          <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="addNote('revenueStream')">add</mat-icon>
+        </div>
+        <app-note *ngFor="let item of mapToArray(dropLists.revenueStream)"
+         [note]="item" [cdkDragData]="item.id" cdkDrag
+         (edit)=onEdit($event)
+         (delete)=onDelete($event)></app-note>
+      </div>
+    </div>
+
+  </div>
+
+</mat-drawer-container>

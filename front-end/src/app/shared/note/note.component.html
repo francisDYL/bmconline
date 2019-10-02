@@ -1,0 +1,17 @@
+<div class="note" >
+    <div class="note-header">
+        <span class="note-title">{{note.title}}</span>
+        <mat-icon [matMenuTriggerFor]="menu" style="cursor: pointer">more_horiz</mat-icon>
+    </div>
+    <p class="note-content">{{note.content}}</p>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="editNote(note.id,note.category)">
+          <mat-icon>edit</mat-icon>edit
+      </button>
+      <button mat-menu-item (click)="deleteNote(note.id,note.category)">
+          <mat-icon>delete</mat-icon>delete
+      </button>
+    </mat-menu>
+    
+</div>

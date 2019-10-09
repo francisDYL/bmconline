@@ -1,0 +1,17 @@
+.sidenav, .main-content{
+    height: 100vh;
+}
+
+.hidden{
+    display: none;
+}
+
+mat-nav-list.list-horizontal {
+    padding: 0;
+    .mat-list-item {
+        color: #fff;
+      display: inline-block;
+      height: auto;
+      width: auto;
+    }
+  }

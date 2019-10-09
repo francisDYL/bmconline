@@ -12,6 +12,18 @@
       </mat-form-field>
   </div>
  
+  <div>
+    <mat-form-field>
+      <mat-label>Color</mat-label>
+      <mat-select [(ngModel)] ="data.color">
+        <mat-option value="#fff">White</mat-option>
+        <mat-option value="#12c934">Green</mat-option>
+        <mat-option value="#f0e91d">Yellow</mat-option>
+        <mat-option value="#f23427">Red</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
 </div>
 <div mat-dialog-actions class="actions-buttons">
   <button mat-button (click)="onNoClick()">No Thanks</button>

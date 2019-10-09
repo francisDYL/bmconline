@@ -2,19 +2,10 @@
     box-sizing: border-box;
 }
 
-.main-container {
-    width: 100vw;
-    height: 100vh;
-  }
-  
-.main-content {
-  height: 100vh;
-  width: 100vw;
-}
-
 .sidenav {
 padding: 20px;
-background-color: rgb(12, 197, 111);
+background-color: #20262e;
+color: #fff;
 }
 
 .sidenav-toggler{
@@ -26,7 +17,7 @@ background-color: rgb(12, 197, 111);
   left: 0;
   top: 50vh;
   border-radius: 0 6px 6px 0;
-  background-color: rgb(12, 197, 111);
+  background-color: #20262e;
   color: #fff;
   z-index: 1000;
 }
@@ -68,51 +59,22 @@ background-color: rgb(12, 197, 111);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: rgba(143, 140, 140, 0.2);
-  font-weight: bold;
+  background-color: #20262e;
+  color: #fff;
 }
 
-.note {
-  width: auto;
-  height: auto;
-  max-width: inherit;
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-top: 10px;
-  border: solid 1px #ccc;
-  color: rgba(0, 0, 0, 0.87);
-  cursor: move;
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  background: #fff;
-  border-radius: 4px;
-  position: relative;
-  z-index: 1;
-  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-              0 2px 2px 0 rgba(0, 0, 0, 0.14),
-              0 1px 5px 0 rgba(0, 0, 0, 0.12);
-}
+@media only screen and (max-width: 800px) {
+  .row{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
 
-.note-content{
-  flex-direction: column;
-  flex-wrap: wrap;
-  padding-left: 5px;
-  padding-right: 5px;
-  flex-grow: 2;
-  word-break: break-all;
-}
+  .column{
+    max-width: 100%;
+  }
 
-.note-title{
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-.note-control{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: rgba(143, 140, 140, 0.2);
+  .column2{
+    max-width: 100%;
+  }
 }

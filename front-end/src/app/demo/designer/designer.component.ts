@@ -1,8 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {MatDialog} from '@angular/material/dialog';
 import {Note} from '../../model/note';
 import {AddNoteDialogComponent} from '../../shared/add-note-dialog/add-note-dialog.component';
+import html2canvas from 'html2canvas';
+import jspdf from 'jspdf';
+
 @Component({
   selector: 'app-designer',
   templateUrl: './designer.component.html',
@@ -10,7 +13,7 @@ import {AddNoteDialogComponent} from '../../shared/add-note-dialog/add-note-dial
 })
 export class DesignerComponent implements OnInit {
 
-  showFiller = false;
+  @ViewChild('sidebar') sidebar;
 
   dropLists = {
     keyPartners: new Map<string, Note>(),
@@ -26,8 +29,8 @@ export class DesignerComponent implements OnInit {
 
 
   constructor(private dialog: MatDialog) {
-    const note: Note = {id: 'partner1', title: 'partner1', content: 'partner1', color: 'gray', category: 'keyPartners'};
-    const note2: Note = {id: 'partner2', title: 'partner2', content: 'partner2', color: 'gray', category: 'keyPartners'};
+    const note: Note = {id: 'partner1', title: 'partner1', content: 'partner1', color: '#fff', category: 'keyPartners'};
+    const note2: Note = {id: 'partner2', title: 'partner2', content: 'partner2', color: '#fff', category: 'keyPartners'};
 
     this.dropLists.keyPartners.set(note.id, note);
     this.dropLists.keyPartners.set(note2.id, note2);
@@ -111,5 +114,23 @@ export class DesignerComponent implements OnInit {
 
   mapToArray(map: Map<string, Note>) {
     return Array.from(map.values());
+  }
+
+  export() {
+    const element = document.getElementById('main-content');
+    html2canvas(element).then(canvas => {
+      const url = canvas.toDataURL('image/jpeg', 1);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'bmc.jpeg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      this.toggleSideBar();
+    });
+  }
+
+  toggleSideBar() {
+    this.sidebar.toggle();
   }
 }

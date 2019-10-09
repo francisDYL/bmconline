@@ -11,6 +11,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [NoteComponent, AddNoteDialogComponent],
   imports: [
@@ -22,7 +23,8 @@ import {MatMenuModule} from '@angular/material/menu';
     MatInputModule,
     MatDialogModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
   ],
   exports: [NoteComponent, AddNoteDialogComponent]
 })

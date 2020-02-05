@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate } from '@angular/router';
+import { StorageService } from '../service/storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DemoGuard implements CanActivate {
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    return true;
-  }
+	constructor(private router: Router, private storageService: StorageService) { }
+
+	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+		if (this.storageService.isTokenPresent()) {
+			this.router.navigate(['/dashboard']);
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 }

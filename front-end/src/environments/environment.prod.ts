@@ -1,3 +1,7 @@
 export const environment = {
-  production: true
+  production: true,
+	storageKey: 'sessionStorage',
+	tokenKey: 'token',
+	userKey: 'user',
+	apiUrl: 'https:bmconline.com'
 };

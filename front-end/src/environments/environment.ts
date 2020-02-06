@@ -5,9 +5,9 @@
 export const environment = {
 	production: false,
 	storageKey: 'localStorage',
-	tokenKey: 'token',
-	userKey: 'user',
-	apiUrl: 'http:localhost:1337'
+	tokenKey: 'bmconlineToken',
+	userKey: 'bmconlineUser',
+	apiUrl: 'http://localhost:1337'
 };
 
 /*

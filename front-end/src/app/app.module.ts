@@ -13,10 +13,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { SignInComponent } from './signin/sign-in.component';
 import { SignUpComponent } from './signup/sign-up.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './service/interceptor/interceptor.service';
 import { StorageService } from './service/storage/storage.service';
 import {UserService} from './service/user/user.service';
+
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -27,6 +30,7 @@ import {UserService} from './service/user/user.service';
 	imports: [
 		BrowserModule,
 		FormsModule,
+		HttpClientModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
 		MatSidenavModule,
@@ -34,7 +38,9 @@ import {UserService} from './service/user/user.service';
 		MatIconModule,
 		MatToolbarModule,
 		MatSidenavModule,
-		MatListModule
+		MatListModule,
+		NgxSpinnerModule,
+		ToastrModule.forRoot()
 	],
 	providers: [
 		StorageService,

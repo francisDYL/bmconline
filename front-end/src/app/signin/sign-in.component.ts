@@ -19,7 +19,7 @@ export class SignInComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	login() {
+	signIn() {
 		this.spinner.show();
 		this.userService.signin(this.email, this.password).subscribe(
 			data => {

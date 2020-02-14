@@ -20,7 +20,7 @@ export class UserService {
 	}
 
 	signup(user: User): Observable<any> {
-		return this.http.post(`${environment.apiUrl}/user/signup`, user);
+		return this.http.post(`${environment.apiUrl}/user/signup`, {user});
 	}
 
 	saveLoginData(data) {

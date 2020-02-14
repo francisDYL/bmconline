@@ -16,8 +16,8 @@ module.exports = {
 				res.status(409);
 				return res.json({ success: false, message: 'An user using this email already exist' });
 			} else {
-				const createdUser = User.create(userToCreate).fetch();
-				res.satus(200);
+				const createdUser = await User.create(userToCreate).fetch();
+				res.status(200);
 				res.json({ success: true, message: 'Successfully signup', user: createdUser });
 			}
 		}

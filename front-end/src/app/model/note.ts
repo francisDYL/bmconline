@@ -1,8 +1,10 @@
 export interface Note {
-	id?: string;
+	uid?: string;
 	title: string;
 	content?: string;
 	color?: string;
 	category?: string;
+	oldCategory?: string;
+	project?: string;
 }
 

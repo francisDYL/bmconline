@@ -6,10 +6,10 @@
     <p class="note-content">{{note.content}}</p>
 
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="editNote(note.id,note.category)">
+      <button mat-menu-item (click)="editNote(note.uid,note.category)">
           <mat-icon>edit</mat-icon>edit
       </button>
-      <button mat-menu-item (click)="deleteNote(note.id,note.category)">
+      <button mat-menu-item (click)="deleteNote(note.uid,note.category)">
           <mat-icon>delete</mat-icon>delete
       </button>
     </mat-menu>

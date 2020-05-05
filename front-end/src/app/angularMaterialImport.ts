@@ -9,7 +9,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
-
+import {MatTableModule} from '@angular/material/table';
+import {MatExpansionModule} from '@angular/material/expansion';
 export const AngularMaterialModules = [
 	MatSidenavModule,
 	DragDropModule,
@@ -21,6 +22,8 @@ export const AngularMaterialModules = [
 	MatMenuModule,
 	MatSelectModule,
 	MatToolbarModule,
-	MatListModule
+	MatListModule,
+	MatTableModule,
+	MatExpansionModule
 
 ];

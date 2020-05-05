@@ -9,9 +9,10 @@ export class DashboardGuard implements CanActivate  {
 	constructor(private router: Router, private storageService: StorageService) {}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-		if (this.storageService.isTokenPresent()) {
+		if(this.storageService.isUserData()){
 			return true;
-		} else {
+		}
+		else{
 			this.router.navigate(['/']);
 			return false;
 		}

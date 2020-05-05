@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import {UserService} from '../service/user/user.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
+import { User } from '../model/user';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -21,9 +21,18 @@ export class SignInComponent implements OnInit {
 
 	signIn() {
 		this.spinner.show();
-		this.userService.signin(this.email, this.password).subscribe(
-			data => {
-				this.userService.saveLoginData(data);
+		this.userService.signin(this.email, this.password).then(
+			(data) => {
+				const user : User = {
+					uid: data.user.uid,
+					email : data.user.email,
+					emailVerified: data.user.emailVerified,
+					displayName: data.user.displayName,
+					photoURL: data.user.photoURL,
+					phoneNumber: data.user.phoneNumber,
+					isAnonymous: data.user.isAnonymous
+				}
+				this.userService.saveLoginData(user);
 				this.router.navigate(['/dashboard']);
 			},
 			error => {
@@ -33,7 +42,7 @@ export class SignInComponent implements OnInit {
 		);
 	}
 
-	handleError(error: any) {
+	handleError(error) {
 		this.email = '';
 		this.password = '';
 		this.spinner.hide();

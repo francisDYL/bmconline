@@ -18,11 +18,11 @@ export class NoteComponent implements OnInit {
   ngOnInit() {
   }
 
-  editNote(id: string, category: string) {
-    this.edit.emit({id, category});
+  editNote(uid: string, category: string) {
+    this.edit.emit({uid, category});
   }
 
-  deleteNote(id: string, category: string) {
-    this.delete.emit({id, category});
+  deleteNote(uid: string, category: string) {
+    this.delete.emit({uid, category});
   }
 }

@@ -16,15 +16,18 @@ const routes: Routes = [
 				path: '',
 				component: LandingComponent
 			}
-		]
+		],
+		canActivate: [DemoGuard]
 	},
 	{
 		path: 'signin',
-		component: SignInComponent
+		component: SignInComponent,
+		canActivate: [DemoGuard]
 	},
 	{
 		path: 'signup',
-		component: SignUpComponent
+		component: SignUpComponent,
+		canActivate: [DemoGuard]
 	},
 	{
 		path: 'demo',

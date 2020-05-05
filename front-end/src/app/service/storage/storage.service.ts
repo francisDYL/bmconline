@@ -10,58 +10,26 @@ import { Subject, Observable } from 'rxjs';
 export class StorageService {
 
 	private storage: Storage;
-	private projectAddedSubject = new Subject<Project>();
 
 	constructor() {
-		this.storage = window[environment.storageKey];
+		this.storage = window.sessionStorage;
 	}
 
 	clear() {
-		this.storage.removeItem(environment.tokenKey);
-		this.storage.removeItem(environment.userKey);
+		if(this.isUserData) this.storage.removeItem(environment.userKey);
 	}
 
-	save(token: string, currentUser: any) {
+	save(data: any) {
 		this.clear();
-
-		this.storage.setItem(environment.tokenKey, token);
-		this.storage.setItem(environment.userKey, JSON.stringify(currentUser));
+		this.storage.setItem(environment.userKey, JSON.stringify(data));
 	}
 
-	getToken(): string {
-		return this.storage.getItem(environment.tokenKey);
-	}
-
-	getCurrentUser(): User {
+	getLoginData(){
 		return JSON.parse(this.storage.getItem(environment.userKey));
 	}
 
-	isTokenPresent(): boolean {
-		const token = this.getToken();
-		return token && token.length > 0;
+	isUserData(){
+		const user = this.storage.getItem(environment.userKey);
+		return (user !== null && user !== undefined)
 	}
-
-	getUserProjects() {
-		const user = this.getCurrentUser();
-		const projects = user.projects;
-		return projects;
-	}
-
-	addProjectToUser(project: Project) {
-		const user = this.getCurrentUser();
-		user.projects.push(project);
-		this.storage.removeItem(environment.userKey);
-		this.storage.setItem(environment.userKey, JSON.stringify(user));
-
-		this.announceNewProjectAdded(project);
-	}
-
-	subscribeToNewProjectAdded(): Observable<Project> {
-		return this.projectAddedSubject.asObservable();
-	}
-
-	announceNewProjectAdded(project: Project) {
-		this.projectAddedSubject.next(project);
-	}
-
 }

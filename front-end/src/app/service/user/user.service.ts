@@ -1,37 +1,61 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Observable, ReplaySubject } from 'rxjs';
 import { User } from 'src/app/model/user';
+import { AngularFireAuth } from "@angular/fire/auth";
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+
+const userSubject: ReplaySubject<User> = new ReplaySubject(1);
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-	constructor(private http: HttpClient, private storageService: StorageService) { }
+	constructor(private storageService: StorageService,
+				public afs: AngularFirestore, 
+				public afAuth: AngularFireAuth
+				) { 
+					this.afAuth.authState.subscribe(data => {
+						if (data) {
+							const user : User = {
+								uid: data.uid,
+								email : data.email,
+								emailVerified: data.emailVerified,
+								displayName: data.displayName,
+								photoURL: data.photoURL,
+								phoneNumber: data.phoneNumber,
+								isAnonymous: data.isAnonymous
+							}
+							this.storageService.save(user);
+							userSubject.next(user);
 
-	signin(email: string, password: string): Observable<any> {
-		return this.http.post(`${environment.apiUrl}/user/signin`, {
-			email,
-			password
-		});
+						} else {
+						  this.storageService.clear();
+						}
+					  });
+				}
+
+	signin(email: string, password: string) {
+		return this.afAuth.auth.signInWithEmailAndPassword(email, password);
 	}
 
-	signup(user: User): Observable<any> {
-		return this.http.post(`${environment.apiUrl}/user/signup`, {user});
+	signup(email: string, password: string){
+		return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
 	}
 
 	saveLoginData(data) {
-		this.storageService.save(data.token, data.user);
+		this.storageService.save(data);
 	}
 
-	getCurrentUser() {
-		return this.storageService.getCurrentUser();
+	user$(): Observable<User> {
+		return userSubject.asObservable();
 	}
 
-
+	isUserLogIn(){
+		return this.storageService.isUserData();
+	}
 	logout(): void {
 		this.storageService.clear();
 	}

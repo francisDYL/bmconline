@@ -1,10 +1,57 @@
 <mat-drawer-container class="main-container" hasBackdrop="true" autosize>
 
   <mat-drawer #sidebar class="sidenav" mode="over">
-    <button mat-icon-button (click)="export()" mat-raised-button>
-      <mat-icon aria-hidden="false"  style="cursor: pointer">save_alt</mat-icon>
-    </button>
+      <button mat-icon-button mat-raised-button (click)="export()" >
+        <mat-icon aria-hidden="false"  style="cursor: pointer">save_alt</mat-icon>
+      </button><br/><br/>
+
+      <button mat-icon-button mat-raised-button (click)="addProject()"> 
+        <mat-icon aria-hidden="false"  style="cursor: pointer">library_add</mat-icon>
+      </button><br/><br/>
+
+      <button [matMenuTriggerFor]="projectMenu" mat-icon-button mat-raised-button > 
+        <mat-icon aria-hidden="false"  style="cursor: pointer">library_books</mat-icon>
+      </button><br/><br/>
+
+      <button [matMenuTriggerFor]="userMenu"  mat-icon-button  mat-raised-button>
+        <mat-icon aria-hidden="false"  style="cursor: pointer">account_circle</mat-icon>
+      </button>
+
+        <mat-menu #userMenu="matMenu">
+          <span mat-menu-item>
+            {{user.email}}
+          </span>
+          <mat-divider></mat-divider>
+          <span mat-menu-item>
+            Other user data
+          </span>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logOut()">
+              <mat-icon>exit_to_app</mat-icon>logout
+          </button>
+        </mat-menu>
+
+        <mat-menu #projectMenu="matMenu">
+          <span mat-menu-item>
+            <mat-form-field>
+              <mat-label>Active project</mat-label>
+              <mat-select (selectionChange)="changeActiveProject($event)">
+                <mat-option  *ngFor="let project of mapProjectToArray(projectList)" value="{{project.uid}}" >{{project.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </span>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="editActiveProject()">
+            <mat-icon>edit</mat-icon>edit
+        </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="deleteActiveProject()">
+              <mat-icon>delete</mat-icon>delete
+          </button>
+        </mat-menu>
+      
   </mat-drawer>
+
   <div class="sidenav-toggler" (click)="toggleSideBar()">
     <mat-icon aria-hidden="false">menu</mat-icon>
   </div>
@@ -117,7 +164,6 @@
          (delete)=onDelete($event)></app-note>
       </div>
     </div>
-
+    <app-chatcontainer [user]="user" [project]="activeProject"></app-chatcontainer>
   </div>
-
 </mat-drawer-container>

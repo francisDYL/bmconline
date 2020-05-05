@@ -1,0 +1,24 @@
+<div class="chatContainer" id="chatContainer">
+  <div class="chat-header">
+    <span class="chat-title">{{project?.name}}</span>
+      <mat-icon aria-hidden="false" style="cursor: pointer" (click)="toggle()">{{icon}}</mat-icon>
+  </div>
+  <div id="chatcontent" [ngClass]="{'chat-content-close':isCollapsed,'chat-content-open':!isCollapsed}">
+    <div class="message-content"  [scrollTop]="scrollHeight" #messageContent>
+      <div *ngFor="let message of messages" class="{{message.direction}}">
+        <div class="message-block">
+          <span>{{message.from}}</span>
+          <p>{{message.content}}</p>
+          <span>{{message.createdAt.toDate().toISOString() | date: 'dd MMM hh:mm'}}</span>
+        </div>
+        
+      </div>
+    </div>
+    <div class="message-sender">
+      <mat-form-field>
+        <input [(ngModel)]="newMessage" matInput (keyup)="handleEnterKey($event)" type="text" autocomplete="off"/>
+      </mat-form-field>
+      <mat-icon aria-hidden="false" style="cursor: pointer" (click)="sendMessage()" >send</mat-icon>
+    </div>
+  </div>
+</div>

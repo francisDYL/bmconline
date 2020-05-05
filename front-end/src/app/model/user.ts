@@ -1,10 +1,11 @@
-import {Project} from './project';
 
 export interface User {
+	uid?: string;
+   	displayName?: string;
+   	photoURL?: string;
+   	emailVerified?: boolean;
 	email?: string;
-	lastName?: string;
-	firstName?: string;
-	password?: string;
-	contacts?: string;
-	projects?: Project[];
+	phoneNumber?: any;
+	isAnonymous?: boolean;
+	role?: string;
 }

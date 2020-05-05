@@ -29,11 +29,11 @@ export class DesignerComponent implements OnInit {
 
 
 	constructor(private dialog: MatDialog) {
-		const note: Note = { id: 'partner1', title: 'partner1', content: 'partner1', color: '#fff', category: 'keyPartners' };
-		const note2: Note = { id: 'partner2', title: 'partner2', content: 'partner2', color: '#fff', category: 'keyPartners' };
+		const note: Note = { uid: 'partner1', title: 'partner1', content: 'partner1', color: '#fff', category: 'keyPartners' };
+		const note2: Note = { uid: 'partner2', title: 'partner2', content: 'partner2', color: '#fff', category: 'keyPartners' };
 
-		this.dropLists.keyPartners.set(note.id, note);
-		this.dropLists.keyPartners.set(note2.id, note2);
+		this.dropLists.keyPartners.set(note.uid, note);
+		this.dropLists.keyPartners.set(note2.uid, note2);
 	}
 
 	ngOnInit() {
@@ -62,15 +62,15 @@ export class DesignerComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result: Note) => {
 			if (result !== undefined && result.title !== '' && result.content !== '') {
-				result.id = this.generateId();
+				result.uid = this.generateId();
 				result.category = category;
-				this.dropLists[category].set(result.id, result);
+				this.dropLists[category].set(result.uid, result);
 			}
 		});
 	}
 
 	onEdit(data) {
-		const note = this.dropLists[data.category].get(data.id);
+		const note = this.dropLists[data.category].get(data.uid);
 		const dialogRef = this.dialog.open(AddNoteDialogComponent, {
 			width: '40vw',
 			data: note
@@ -78,17 +78,17 @@ export class DesignerComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result: Note) => {
 			if (result !== undefined && result.title !== '' && result.content !== '') {
-				this.dropLists[data.category].set(data.id, result);
+				this.dropLists[data.category].set(data.uid, result);
 			}
 		});
 	}
 
 	onDelete(data) {
-		this.dropLists[data.category].delete(data.id);
+		this.dropLists[data.category].delete(data.uid);
 	}
 
 	createNote() {
-		return { id: '', title: '', content: '', color: '', category: '' };
+		return { uid: '', title: '', content: '', color: '', category: '' };
 	}
 
 	generateId() {

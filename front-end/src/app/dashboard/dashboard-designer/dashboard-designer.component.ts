@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { Note } from '../../model/note';
@@ -8,21 +8,30 @@ import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { UserService } from '../../service/user/user.service';
 import { User } from 'src/app/model/user';
-import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Project } from 'src/app/model/project';
+import { ToastrService } from 'ngx-toastr';
+import { AddProjectDialogComponent } from '../../shared/add-project-dialog/add-project-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-designer',
 	templateUrl: './dashboard-designer.component.html',
 	styleUrls: ['./dashboard-designer.component.scss']
 })
-export class DashboardDesignerComponent implements OnInit {
+export class DashboardDesignerComponent implements OnInit, OnDestroy {
+
+	ngOnDestroy(): void {
+		if(this.projectSubscription!==null && this.projectSubscription!==undefined) this.projectSubscription.unsubscribe();
+		if (this.noteSubscription!== null && this.noteSubscription!== undefined) this.noteSubscription.unsubscribe();
+	}
 
 	@ViewChild('sidebar') sidebar;
 	public user: User = {};
 	projectList: Map<string, Project> = new Map<string, Project>();
 	activeProject: Project;
+	projectSubscription: Subscription;
+	noteSubscription: Subscription;
 
 	dropLists = {
 		keyPartners: new Map<string, Note>(),
@@ -38,9 +47,9 @@ export class DashboardDesignerComponent implements OnInit {
 
 
 	constructor(private dialog: MatDialog,
-				private router: Router,
 				private userService: UserService,
-				private fireStore: AngularFirestore, ) {
+				private fireStore: AngularFirestore,
+				private toastr: ToastrService) {
 		userService.user$().subscribe(
 			data => { 
 				this.user = data;
@@ -86,7 +95,10 @@ export class DashboardDesignerComponent implements OnInit {
 						(data)=>{
 							//this.dropLists[category].set(result.uid, result);
 						},
-						(error)=>{console.error(error)}
+						(error)=>{
+							this.toastr.error('unexpected error please try again');
+							console.error(error);
+						}
 					);
 				}
 		});
@@ -119,8 +131,9 @@ export class DashboardDesignerComponent implements OnInit {
 	}
 
 	initProjectListAndActiveProject(){
+		if(this.projectSubscription!==null && this.projectSubscription!==undefined) this.projectSubscription.unsubscribe();
 		let activeProjectChange = false;
-		this.fireStore.collection<Project>('projects', ref => ref.where('users','array-contains',`${this.user.uid}`)).stateChanges().subscribe(
+		this.projectSubscription = this.fireStore.collection<Project>('projects', ref => ref.where('users','array-contains',`${this.user.uid}`)).stateChanges().subscribe(
 			(changes)=>{
 				changes.forEach((change =>{
 					const project: Project = change.payload.doc.data();
@@ -147,17 +160,19 @@ export class DashboardDesignerComponent implements OnInit {
 				if(activeProjectChange) this.initDropList();
 			},
 			(error)=>{
-				console.log(error)
+				//this.toastr.error('unexpected error please try again');
+				console.error(error);
 			}
 		)
 	}
 
 	initDropList(){
+		if (this.noteSubscription!== null && this.noteSubscription!== undefined) this.noteSubscription.unsubscribe();
 		if (this.activeProject === null){
-			if(this.projectList.size === 0) alert(`you have no project, please create one`);
+			if(this.projectList.size === 0) this.toastr.warning(`you have no project, please create one`);
 		}
 		else{
-			this.fireStore.collection<Note>('notes',ref => ref.where('project','==',this.activeProject.uid))
+			this.noteSubscription =	this.fireStore.collection<Note>('notes',ref => ref.where('project','==',this.activeProject.uid))
 			.stateChanges().subscribe(
 				(changes)=>{
 					changes.forEach(change => {
@@ -181,6 +196,7 @@ export class DashboardDesignerComponent implements OnInit {
 					});
 				},
 				(error)=>{
+					this.toastr.error('unexpected error please try again');
 					console.error(error);
 				}
 			);
@@ -216,24 +232,48 @@ export class DashboardDesignerComponent implements OnInit {
 
 	logOut(){
 		this.userService.logout();
-		this.router.navigate(['/']);
 	}
 
 	addProject(){
-		const name = prompt("give a name")
-		const project: Project = {name:name, owner: this.user.uid, state:'active', users:[this.user.uid]}
-		project.uid = this.fireStore.createId();
+		const dialogRef = this.dialog.open(AddProjectDialogComponent, {
+			width: '40vw',
+			data: ''
+		});
 
-		this.fireStore.collection('projects').doc(project.uid).set(project).then(
-			(data)=>{
-				this.projectList.set(project.uid,project);
-				alert("successfully create a project");
-			},
-			(error)=>{
-				console.log(error);
+		dialogRef.afterClosed().subscribe((result: string) => {
+			if (result !== undefined && result.length > 0) {
+				const projectSubScription = this.fireStore.collection<Project>('projects', ref => ref.where('name','==',`${result}`)).snapshotChanges().subscribe(
+					(data: [])=>{
+						if(data.length>0){
+							projectSubScription.unsubscribe();
+							this.toastr.error('this name already used');
+						}
+						else{
+							projectSubScription.unsubscribe();
+							const project: Project = {name:result, owner: this.user.uid, state:'active', users:[this.user.uid]}
+							project.uid = this.fireStore.createId();
+							this.fireStore.collection('projects').doc(project.uid).set(project).then(
+								(data)=>{
+									this.projectList.set(project.uid,project);
+									this.toastr.success("successfully create a project");
+								},
+								(error)=>{
+									this.toastr.error('unexpected error please try again');
+									console.error(error);
+								}
+							);
+						}
+					},
+					(error)=>{
+						this.toastr.error('unexpected error please try again');
+						console.error(error);
+					}
+				);
 			}
-		);
-				
+			else{
+				this.toastr.warning(`project name can't be empty`);
+			}
+		});		
 	}
 
 	changeActiveProject(event){
@@ -258,7 +298,18 @@ export class DashboardDesignerComponent implements OnInit {
 	}
 
 	deleteActiveProject(){
-		// delete active project
+		if(this.activeProject.owner === this.user.uid){
+			this.fireStore.collection<Project>('projects').doc(`${this.activeProject.uid}`).delete().then(
+				()=>{this.toastr.success(`Project successfully deleted`);}
+			)
+			.catch((error)=>{
+				this.toastr.error('unexpected error please try again');
+				console.error(error);
+			});
+		}
+		else{
+			this.toastr.warning(`you don't have right to delete the project`);
+		}
 	}
 
 	clearDropList(){

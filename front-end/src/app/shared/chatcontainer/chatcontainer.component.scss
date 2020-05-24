@@ -3,7 +3,7 @@
     flex-direction: column;
     z-index: 999;
     background-color:#fcfcfc ;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 5vw;
     border: 0.5px solid #20262e;
@@ -79,22 +79,37 @@
 .message-block p{
     padding: 0;
     margin: 0.05rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .message-block span{
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 
 .message-in .message-block{
     border-radius:0 5px 5px 5px;
-    background-color: rgb(19, 117, 68);
+    background-color: rgb(0, 9, 46);
     color:rgb(238, 235, 235);
 }
 
 .message-out .message-block{
     border-radius:5px 5px 0px 5px;
-    background-color: rgb(14, 67, 182);
+    background-color: rgb(32, 32, 36);
     color:rgb(238, 235, 235);
+}
+
+@media only screen and (max-width: 800px) {
+    .chatContainer{
+        right: 25vw;
+    }
+
+    .chat-content-close{
+        width: 50vw;
+    }
+
+    .chat-content-open{
+        width: 50vw;
+        height: 40vh;
+    }
 }

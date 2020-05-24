@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Project } from '../../model/project';
 import { User } from '../../model/user';
 import { AngularFirestore, DocumentData } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-edit-project',
   templateUrl: './edit-project.component.html',
@@ -11,14 +11,14 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class EditProjectComponent implements OnInit {
 
-  userList: User[] = [];
+  userList: Map<string,User> = new Map<string,User>();
   displayedColumns: string[] = ['email', 'role', 'delete'];
   userEmail: string = '';
 
   constructor(public dialogRef: MatDialogRef<EditProjectComponent>,
      @Inject(MAT_DIALOG_DATA) public data:Project,
      private fireStore: AngularFirestore,
-     private fireAuth: AngularFireAuth) {
+			private toastr: ToastrService) {
         this.initUserList();
       }
 
@@ -28,42 +28,75 @@ export class EditProjectComponent implements OnInit {
 
   initUserList(){
     for (let userUid of this.data.users){
-      this.fireStore.collection<User>('/users').doc(userUid)
+     const userSubScription = this.fireStore.collection<User>('/users').doc(userUid)
       .valueChanges().subscribe(
         ((user: User)=>{
           if(user.uid === this.data.owner) user.role = 'Owner';
           else user.role = 'Contributor';
 
-          this.userList.push(user);
-          this.userList = [...this.userList];
+          this.userList.set(user.uid,user);
+          userSubScription.unsubscribe();
         })
       );
+
     }
   }
 
   addUserToProject(){
-    this.fireStore.collection<User>('users',ref=>ref.where('email','==',this.userEmail))
+  const userSubScription =  this.fireStore.collection<User>('users',ref=>ref.where('email','==',this.userEmail))
         .valueChanges().subscribe(
           (data: User[]) =>{
-            this.data.users.push(data[0].uid);
-            this.fireStore.collection('projects').doc(this.data.uid).set(this.data).then(
-              () => alert('user added')
-            ).catch(
-              (error) => alert(error)
-            )
+            if(data.length>0){
+              this.data.users.push(data[0].uid);
+              this.fireStore.collection('projects').doc(this.data.uid).set(this.data).then(
+                () => {
+                  data[0].role = 'Contributor';
+                  this.userList.set(data[0].uid,data[0]);
+                  this.toastr.success(`user successfully added`);
+                  userSubScription.unsubscribe();
+                }
+              ).catch(
+                (error) => {
+                  this.toastr.error(`unexpected error please try again`);
+                  console.error(error);
+                  userSubScription.unsubscribe();
+                }
+              )
+            }
+            else{
+              this.toastr.warning(`user with email ${this.userEmail} doesn't exit`);
+              userSubScription.unsubscribe();
+            }
+           
           },
           error => {
-            alert('error occur');
+            this.toastr.error(`unexpected error please try again`);
             console.error(error);
-          })
+          });
   }
 
   deleteUserFomProject(userUid: string){
-
+    const index = this.data.users.indexOf(userUid);
+    this.data.users.splice(index,1);
+    this.fireStore.collection('projects').doc(this.data.uid).set(this.data).then(
+      ()=> {
+        this.userList.delete(userUid);
+        this.toastr.success('user successfully removed');
+      }
+    ).catch(
+      (error)=>{
+        this.toastr.error(`unexpected error please try again`);
+        console.error(error);
+      }
+    )
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+  userMapToArray() {
+		return Array.from(this.userList.values());
+	}
 
 }

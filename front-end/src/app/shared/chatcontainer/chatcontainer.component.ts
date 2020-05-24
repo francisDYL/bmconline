@@ -1,20 +1,25 @@
-import { Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy} from '@angular/core';
 import { User } from 'src/app/model/user';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Project } from 'src/app/model/project';
 import {firestore} from 'firebase/app';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chatcontainer',
   templateUrl: './chatcontainer.component.html',
   styleUrls: ['./chatcontainer.component.scss']
 })
-export class ChatcontainerComponent implements OnInit {
+export class ChatcontainerComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    if(this.messageSubscription) this.messageSubscription.unsubscribe();
+  }
 
   isCollapsed: boolean = false;
   icon: string = 'expand_more';
   _project: Project;
   _user: User = {};
   scrollHeight: number;
+  messageSubscription: Subscription;
   @ViewChild('messageContent') messageContent : ElementRef ; 
   @Input() set project(project: Project){
     if(project !== undefined){
@@ -53,8 +58,10 @@ export class ChatcontainerComponent implements OnInit {
   }
 
   initMessageLIstener(){
+    if(this.messageSubscription) this.messageSubscription.unsubscribe();
     this.messages = [];
-    this.fireStore.collection('messages',ref => ref.where('project','==',this._project.uid)
+    if(this._project){
+      this.messageSubscription = this.fireStore.collection('messages',ref => ref.where('project','==',this._project.uid)
       .orderBy('createdAt','asc'))
 			.stateChanges().subscribe(
       (changes)=>{
@@ -68,6 +75,8 @@ export class ChatcontainerComponent implements OnInit {
 						}
         })
       });
+    }
+   
   }
 
   sendMessage(){

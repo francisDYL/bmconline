@@ -1,6 +1,6 @@
 <mat-drawer-container class="main-container" hasBackdrop="true" autosize>
 
-  <mat-drawer #drawer class="sidenav" mode="over">
+  <mat-drawer #drawer class="sidenav" mode="over" color="primary">
       <mat-nav-list>
             <mat-list-item>
               <a routerLink="/demo">Demo</a>
@@ -22,7 +22,7 @@
              mat-icon-button (click)="drawer.toggle()" >
               <mat-icon>menu</mat-icon>
             </button>
-            <span>BMC-ONLINE</span>
+            <span><img src="assets/img/logo.png" alt="BMC-ONLINE" style="width: 160px ; height: 160px;"></span>
             <mat-nav-list class="list-horizontal" [ngClass]= "{'hidden': (isHandset$ | async)}">
                 <mat-list-item>
                   <a routerLink="/demo">Demo</a>
@@ -36,6 +36,67 @@
           </mat-toolbar-row>
         </mat-toolbar>
 
-        <h1>Welcome</h1>
+        <div class="jumbotron">
+          <h1>Welcome to BMC-ONLINE</h1>
+          <p>Your online tool for buiding business model canvas and collaborate with friends</p>
+        </div>
+
+        <div class="services">
+          <mat-card>
+            <img mat-card-image src="assets/img/build.jpg" alt="biuld">
+            <mat-card-content>
+              <p>
+                Build Your business model easily with a canvas powered by drag and drop feature.
+              </p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <img mat-card-image src="assets/img/collaborate.jpg" alt="collaborate">
+            <mat-card-content>
+              <p>
+                Collaborate with your friends around the world in real time using public chat. 
+              </p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card >
+            <img mat-card-image src="assets/img/export.jpg" alt="export">
+            <mat-card-content>
+              <p>
+                Export your business model as image and shared with other.
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="footer">
+          <h1>Contact us</h1>
+          <form #contactForm="ngForm">
+            <div>
+              <mat-form-field>
+                <input type="email" matInput name="email" [(ngModel)] = "email" placeholder="Email" #emailRef="ngModel"
+                [ngClass]="{'is-invalid': emailRef.invalid && emailRef.touched,'is-valid': emailRef.valid && emailRef.touched}"
+                pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+              </mat-form-field>
+            </div>
+          
+            <div>
+                <mat-form-field>
+                    <textarea matInput name="content" [(ngModel)] = "content" #contentRef="ngModel" 
+                    [ngClass]="{'is-invalid': contentRef.invalid && contentRef.touched,'is-valid': contentRef.valid && contentRef.touched}"
+                    placeholder="Message" required></textarea>
+                </mat-form-field>
+            </div>
+            <div class="actions-buttons">
+              <button mat-raised-button color="warn" type="reset">RESET</button>
+              <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="contactForm.invalid">SEND</button>
+            </div>
+          </form>
+        </div>
+        
   </div>
+  <ngx-spinner bdColor="#20262e" size="medium" color="#fff" type="ball-clip-rotate-pulse">
+    <p style="font-size: 10px; color: white; display: inline;">Loading...</p>
+  </ngx-spinner>
 </mat-drawer-container>

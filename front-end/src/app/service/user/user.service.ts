@@ -5,6 +5,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { User } from 'src/app/model/user';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 
 const userSubject: ReplaySubject<User> = new ReplaySubject(1);
 
@@ -15,7 +16,8 @@ export class UserService {
 
 	constructor(private storageService: StorageService,
 				public afs: AngularFirestore, 
-				public afAuth: AngularFireAuth
+				public afAuth: AngularFireAuth,
+				private router: Router,
 				) { 
 					this.afAuth.authState.subscribe(data => {
 						if (data) {
@@ -57,6 +59,8 @@ export class UserService {
 		return this.storageService.isUserData();
 	}
 	logout(): void {
+		this.afAuth.auth.signOut();
 		this.storageService.clear();
+		this.router.navigate(['/']);
 	}
 }

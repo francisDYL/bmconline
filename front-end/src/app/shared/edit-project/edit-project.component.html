@@ -7,7 +7,7 @@
   </div>
 
   <div>
-    <table mat-table [dataSource]="userList" class="mat-elevation-z8">
+    <table mat-table [dataSource]="userMapToArray()" class="mat-elevation-z8">
 
       <ng-container matColumnDef="email">
         <th mat-header-cell *matHeaderCellDef> Email </th>
@@ -21,7 +21,12 @@
 
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef> Delete </th>
-        <td mat-cell *matCellDef="let element"> <mat-icon>delete</mat-icon> </td>
+        <td mat-cell *matCellDef="let element">
+          <button color="primary" mat-icon-button [disabled]="element.role === 'Owner'" (click)="deleteUserFomProject(element.uid)" >
+            <mat-icon style="cursor: pointer">delete</mat-icon> 
+          </button>
+           
+          </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -39,7 +44,7 @@
   </div>
 </div>
 <div mat-dialog-actions class="actions-buttons">
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+  <button mat-raised-button (click)="onNoClick()">No Thanks</button>
+  <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
 </div>
 

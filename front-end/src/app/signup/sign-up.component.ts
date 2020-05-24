@@ -32,7 +32,7 @@ export class SignUpComponent implements OnInit {
 			data => {
 				console.log(data);
 				this.spinner.hide();
-				this.toastr.error('sucessfully sign up');
+				this.toastr.success('sucessfully sign up');
 				this.router.navigate(['/signin']);
 			},
 			error => {

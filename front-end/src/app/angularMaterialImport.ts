@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCardModule} from '@angular/material/card';
 export const AngularMaterialModules = [
 	MatSidenavModule,
 	DragDropModule,
@@ -24,6 +25,7 @@ export const AngularMaterialModules = [
 	MatToolbarModule,
 	MatListModule,
 	MatTableModule,
-	MatExpansionModule
+	MatExpansionModule,
+	MatCardModule
 
 ];

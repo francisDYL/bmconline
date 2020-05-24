@@ -9,9 +9,10 @@ import {SharedModule} from '../shared/shared.module';
 
 import { AddNoteDialogComponent } from '../shared/add-note-dialog/add-note-dialog.component';
 import {EditProjectComponent} from '../shared/edit-project/edit-project.component';
+import { AddProjectDialogComponent } from '../shared/add-project-dialog/add-project-dialog.component';
 @NgModule({
   declarations: [...dashbordComponents],
-  entryComponents: [AddNoteDialogComponent,EditProjectComponent],
+  entryComponents: [AddNoteDialogComponent,EditProjectComponent, AddProjectDialogComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
